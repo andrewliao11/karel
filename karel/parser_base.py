@@ -8,6 +8,7 @@ from collections import defaultdict
 from . import yacc
 from .karel import Karel
 from .utils import pprint, timeout, get_rng, str2bool, TimeoutError
+import ipdb
 
 
 class Parser(object):
@@ -115,6 +116,8 @@ class Parser(object):
                 return yacc.parse(code, **kwargs)()
             self.funct_table[code_hash] = fn
 
+        # append the final state
+        self.karel.record_state()
         out = fn()
         return out
 
@@ -192,6 +195,8 @@ class Parser(object):
         self.hit_info = None
         self.funct_table = {} # save parsed function
 
+    def get_state_sequence(self):
+        return self.karel.state_sequence
 
 def dummy():
     pass

@@ -1,6 +1,7 @@
 from __future__ import print_function
 
 from .parser_base import dummy, get_hash, parser_prompt, Parser
+import ipdb
 
 
 class KarelForSynthesisParser(Parser):

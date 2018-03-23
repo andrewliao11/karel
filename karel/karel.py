@@ -60,6 +60,7 @@ class Karel(object):
         self.rng = get_rng(rng)
 
         self.markers = []
+        self.state_sequence = []
         if state is not None:
             self.parse_state(state)
         elif world_path is not None:
@@ -163,6 +164,7 @@ class Karel(object):
 
         self.world = world
 
+    # only draw the current state
     def draw(self, prefix="", skip_number=False, with_color=False, no_print=False):
         canvas = np.array(self.world)
 
@@ -286,17 +288,20 @@ class Karel(object):
             success = False
         else:
             self.hero.move()
+        self.record_state()
         return success
 
     @hero_action
     def turn_left(self):
         '''Turn left'''
         self.hero.turn_left()
+        self.record_state()
 
-    @marker_action
+    @hero_action
     def turn_right(self):
         '''Turn right'''
         self.hero.turn_right()
+        self.record_state()
 
     @marker_action
     def pick_marker(self):
@@ -310,6 +315,7 @@ class Karel(object):
         else:
             #raise Exception('can\'t pick marker from empty location')
             pass
+        self.record_state()
 
     @marker_action
     def put_marker(self):
@@ -320,7 +326,9 @@ class Karel(object):
         else:
             self.markers.append(self.hero.position)
             self.hero.put_marker()
-        return Counter(self.markers)[self.hero.position]
+        n = Counter(self.markers)[self.hero.position]
+        self.record_state()
+        return n
 
     @world_condition
     def front_is_clear(self):
@@ -388,6 +396,9 @@ class Karel(object):
             return 2
         elif self.facing_east: # (1, 0)
             return 3
+
+    def record_state(self):
+        self.state_sequence.append(self.state)
 
     frontIsClear = front_is_clear
     leftIsClear = left_is_clear

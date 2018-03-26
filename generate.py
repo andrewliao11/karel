@@ -45,6 +45,11 @@ if __name__ == '__main__':
                                                                              config.world_width, 
                                                                              config.world_height))
     hf = h5py.File(hf_path, 'w')
+    word2idx = hf.create_group('word2idx')
+    idx2word = hf.create_group('idx2word')
+    for k, v in parser.token_to_idx_details.items():
+        word2idx[k] = str(v)
+        idx2word[str(v)] = k
 
     if config.mode == 'text':
         for name in datasets:

@@ -15,7 +15,7 @@ except:
 
 if __name__ == '__main__':
     data_arg = argparse.ArgumentParser()
-    data_arg.add_argument('--num_code_train', type=int, default=50000)
+    data_arg.add_argument('--num_code_train', type=int, default=100000)
     data_arg.add_argument('--num_code_test', type=int, default=5000)
     data_arg.add_argument('--num_code_val', type=int, default=5000)
     data_arg.add_argument('--num_trace_train', type=int, default=10)
@@ -114,8 +114,8 @@ if __name__ == '__main__':
                     subgrp['input'] = inputs
                     subgrp['output'] = outputs
                     for j, (arr1, arr2) in enumerate(zip(state_sequences, state_actions)):
-                        subgrp['state_sequence_{}'.format(j)] = arr1
-                        subgrp['state_action_{}'.format(j)] = arr2
+                        subgrp['state_sequence/{}'.format(j)] = arr1
+                        subgrp['state_action/{}'.format(j)] = arr2
                     subgrp['code'] = token_idxes
                     subgrp['code_length'] = len(token_idxes)
                     i += 1

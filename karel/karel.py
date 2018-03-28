@@ -59,8 +59,16 @@ class Karel(object):
         self.debug = debug
         self.rng = get_rng(rng)
 
+        self.action_dict = {
+            'move': 0, 
+            'turn_left': 1, 
+            'turn_right': 2, 
+            'put_marker': 3, 
+            'pick_marker': 4
+            }
         self.markers = []
         self.state_sequence = []
+        self.state_actions = []
         if state is not None:
             self.parse_state(state)
         elif world_path is not None:
@@ -288,20 +296,20 @@ class Karel(object):
             success = False
         else:
             self.hero.move()
-        self.record_state()
+        self.record_state('move')
         return success
 
     @hero_action
     def turn_left(self):
         '''Turn left'''
         self.hero.turn_left()
-        self.record_state()
+        self.record_state('turn_left')
 
     @hero_action
     def turn_right(self):
         '''Turn right'''
         self.hero.turn_right()
-        self.record_state()
+        self.record_state('turn_right')
 
     @marker_action
     def pick_marker(self):
@@ -315,7 +323,7 @@ class Karel(object):
         else:
             #raise Exception('can\'t pick marker from empty location')
             pass
-        self.record_state()
+        self.record_state('pick_marker')
 
     @marker_action
     def put_marker(self):
@@ -327,7 +335,7 @@ class Karel(object):
             self.markers.append(self.hero.position)
             self.hero.put_marker()
         n = Counter(self.markers)[self.hero.position]
-        self.record_state()
+        self.record_state('put_marker')
         return n
 
     @world_condition
@@ -397,8 +405,10 @@ class Karel(object):
         elif self.facing_east: # (1, 0)
             return 3
 
-    def record_state(self):
+    def record_state(self, act=None):
         self.state_sequence.append(self.state)
+        if act is not None:
+            self.state_actions.append(self.action_dict[act])
 
     frontIsClear = front_is_clear
     leftIsClear = left_is_clear

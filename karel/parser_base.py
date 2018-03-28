@@ -7,6 +7,7 @@ from collections import defaultdict
 
 from . import yacc
 from .karel import Karel
+
 from .utils import pprint, timeout, get_rng, str2bool, TimeoutError
 import ipdb
 
@@ -197,6 +198,16 @@ class Parser(object):
 
     def get_state_sequence(self):
         return self.karel.state_sequence
+
+    def get_state_action(self):
+        return self.karel.state_actions
+
+    def get_action_dict(self):
+        try:
+            return self.karel.action_dict
+        except:
+            self.karel = Karel(world_size=(4, 4))
+            return self.karel.action_dict
 
 def dummy():
     pass
